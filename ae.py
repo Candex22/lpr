@@ -129,9 +129,23 @@ def botones_opc(opcion):
     elif opcion == 3:
         mostrar_estado_tareas()
 
+def iniciobd():
+    global conexion1,cursor1
+    conexion1=mysql.connector.connect(host="localhost", user="root", passwd="", database="lpr")
+    cursor1=conexion1.cursor()
+
+def cierrebd():
+    conexion1.close()
+
 def register():
-    if usuario_register.get()=="wenas" and contrasena_register.get()=="a":
-        print("wenas")
+    a = usuario_register.get()
+    b = contrasena_register.get()
+    iniciobd()
+    sql="insert into users(usuario, contra) values (%s,%s)"
+    datos=(a,b)
+    cursor1.execute(sql, datos)
+    conexion1.commit()
+    cierrebd()
 
 def login():
 

@@ -113,6 +113,7 @@ def mostrar_tareas():
 
 # Menu de botones
 def botones_opc(opcion):
+
     texto.config(text="")
     texto.pack_forget()
     titulo_label.pack_forget()
@@ -148,7 +149,8 @@ def register():
     cierrebd()
 
 def login():
-
+    usuario_label1.pack_forget()
+    contrasena_label1.pack_forget()
     if usuario_login.get()=="wenas" and contrasena_login.get()=="wenas":
         # Creacion de los botones de navegación
         usuario_login.pack_forget()
@@ -194,19 +196,19 @@ def login():
 
         submit = Button(ventana, text="Guardar", command=agregar_tarea_a_lista)
         submit.pack()
-
-usuario_label1=Label(text = "nombre de usuario")
+titulo = Label(text="")
+usuario_label1=Label(text = "Nombre de usuario")
 usuario_login=Entry(ventana)
-contrasena_label1=Label(text = "contraseña")
+contrasena_label1=Label(text = "Contraseña")
 contrasena_login=Entry(ventana)
-enviar = Button( text= "enviar" ,command=login)
+enviar = Button( text= "Contraseña" ,command=login)
 
 
-usuario_label=Label(text = "nombre de usuario")
+usuario_label=Label(text = "Nombre de usuario")
 usuario_register=Entry(ventana)
-contrasena_label=Label(text = "contraseña")
+contrasena_label=Label(text = "Contraseña")
 contrasena_register=Entry(ventana)
-enviar_register = Button( text= "enviar" ,command=register)
+enviar_register = Button( text= "Contraseña" ,command=register)
 
 
 def log_opc(opcion):
@@ -220,14 +222,17 @@ def log_opc(opcion):
     contrasena_label.pack_forget()
     contrasena_register.pack_forget()
     enviar_register.pack_forget()
-   
+    titulo.pack()
+
     if opcion==1:
+        titulo.config(text="Iniciar sesion", font=('Helvaltica', 15))
         usuario_label1.pack()
         usuario_login.pack(pady=5)
         contrasena_label1.pack()
         contrasena_login.pack()
         enviar.pack()
     elif opcion==2:
+        titulo.config(text="Registrate", font=('Helvaltica', 15))
         usuario_label.pack()
         usuario_register.pack(pady=5)
         contrasena_label.pack()

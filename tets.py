@@ -159,11 +159,24 @@ def register():
     cierrebd()
 
 def login():
-    titulo.pack_forget()
-    usuario_label1.pack_forget()
-    contrasena_label1.pack_forget()
-    if usuario_login.get()=="wenas" and contrasena_login.get()=="wenas":
+    iniciobd()
+    cursor1.execute("select usuario, contra FROM users")
+    rows = cursor1.fetchall()
+    a = usuario_login.get()
+    b = contrasena_login.get()
+    for row in rows:
+        if a == row[0] and b == row[1]:
+            cierrebd()
+            principal()
+            break
+        else:
+            print("cueck")
+
+def principal():
         # Creacion de los botones de navegacion
+        titulo.pack_forget()
+        usuario_label1.pack_forget()
+        contrasena_label1.pack_forget()
         usuario_login.pack_forget()
         contrasena_login.pack_forget()
         usuario_label.pack_forget()

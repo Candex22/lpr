@@ -98,7 +98,7 @@ def agregar_tarea_a_lista():
         descripcion_entry.delete(0, END)
         fecha_vencimiento_entry.set_date(datetime.now())  # Resetear la fecha al día actual
     else:
-        messagebox.showwarning("Campos vacíos", "Por favor, complete todos los campos.")
+        messagebox.showwarning("Campos vacios", "Por favor, complete todos los campos.")
 
 
 

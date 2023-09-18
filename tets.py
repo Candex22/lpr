@@ -68,6 +68,7 @@ def cierrebd():
     cursor1.close()
     conexion1.close()
 
+
 # Funcion para agregar tareas a la lista
 def agregar_tarea_a_lista():
     titulo = titulo_entry.get()
@@ -159,18 +160,26 @@ def register():
     cierrebd()
 
 def login():
+    global usuario_actual
     iniciobd()
     cursor1.execute("select usuario, contra FROM users")
     rows = cursor1.fetchall()
     a = usuario_login.get()
+    usuario_actual = a
     b = contrasena_login.get()
+    check = 0
     for row in rows:
         if a == row[0] and b == row[1]:
+            check = 1
             cierrebd()
             principal()
             break
         else:
-            print("cueck")
+            check = 2
+    if check == 2:
+        messagebox.showwarning("","Usuario no encontrado")
+            
+    
 
 def principal():
         # Creacion de los botones de navegacion

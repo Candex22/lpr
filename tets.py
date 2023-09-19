@@ -15,7 +15,7 @@ class Tarea:
         self.completada = BooleanVar()  # Crear una BooleanVar separada para cada tarea
         self.completada.set(False)  # Inicializar como no completada
 
-# Definición de variables
+# Definicion de variables
 lista_tareas = []
 checkboxes = []
 
@@ -60,7 +60,7 @@ def mostrar_campos_de_entrada():
     submit.pack()
 
 def iniciobd():
-    global conexion1, cursor1
+    global conexion1,cursor1
     conexion1 = mysql.connector.connect(host="localhost", user="root", passwd="", database="lpr")
     cursor1 = conexion1.cursor()
 
@@ -71,11 +71,12 @@ def cierrebd():
 
 # Funcion para agregar tareas a la lista
 def agregar_tarea_a_lista():
+    global usuario_id
     titulo = titulo_entry.get()
     descripcion = descripcion_entry.get()
     fecha_vencimiento_str = fecha_vencimiento_entry.get_date()  # Obtenemos la fecha del DateEntry
     fecha_vencimiento = fecha_vencimiento_str.strftime('%Y-%m-%d')  # Convertimos la fecha a cadena
-    usuario_id = 5  # Reemplaza con el ID del usuario correcto
+    usuario_id = 8  # Reemplaza con el ID del usuario correcto
 
     if titulo and descripcion and fecha_vencimiento:
         tarea = Tarea(titulo, descripcion, fecha_vencimiento)
@@ -96,7 +97,7 @@ def agregar_tarea_a_lista():
         # Limpiar los entry widgets despues de agregar una tarea
         titulo_entry.delete(0, END)
         descripcion_entry.delete(0, END)
-        fecha_vencimiento_entry.set_date(datetime.now())  # Resetear la fecha al día actual
+        fecha_vencimiento_entry.set_date(datetime.now())  # Resetear la fecha al dia actual
     else:
         messagebox.showwarning("Campos vacios", "Por favor, complete todos los campos.")
 
@@ -107,20 +108,37 @@ def mostrar_tareas():
     # Borrar cualquier widget previo
     for widget in texto.winfo_children():
         widget.destroy()
-    
     tarea_texto = ""
 
     for i, tarea in enumerate(lista_tareas, start=1):
+        #agarro todas las tareas
+        iniciobd()
+        
+        cursor1.execute(f"select titulo FROM tareas where user= '{usuario_id}' ")
+        titulo= cursor1.fetchall()
+        
+
+        cursor1.execute(f"select descripcion FROM tareas where user= '{usuario_id}' ")
+        descripcion=cursor1.fetchall()
+       
+
+        cursor1.execute(f"select fecha_venc FROM tareas where user= '{usuario_id}' ")
+        fecha_venc=cursor1.fetchall()
+        
+
+        
+        cierrebd()
+
         tarea_texto += f"Tarea {i}:\n"
-        tarea_texto += f"Titulo: {tarea.titulo}\n"
-        tarea_texto += f"Descripcion: {tarea.descripcion}\n"
+        tarea_texto += f"Titulo: {titulo[i]}\n"
+        tarea_texto += f"Descripcion: {descripcion[i]}\n"
         
         if tarea.completada.get() == False:
             tarea_texto += "Estado: Incompleto\n"
         else:
             tarea_texto += "Estado: Completo\n"
         
-        tarea_texto += f"Fecha de Vencimiento: {tarea.fecha_vencimiento}\n\n"
+        tarea_texto += f"Fecha de Vencimiento: {fecha_venc[i]}\n\n"
 
     texto.config(text=tarea_texto)
     texto.pack()

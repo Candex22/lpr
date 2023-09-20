@@ -18,6 +18,8 @@ class Tarea:
 # Definicion de variables
 lista_tareas = []
 checkboxes = []
+usuario_id = None
+
 
 # Funcion para mostrar el estado de las tareas
 def mostrar_estado_tareas():
@@ -76,17 +78,14 @@ def agregar_tarea_a_lista():
     descripcion = descripcion_entry.get()
     fecha_vencimiento_str = fecha_vencimiento_entry.get_date()  # Obtenemos la fecha del DateEntry
     fecha_vencimiento = fecha_vencimiento_str.strftime('%Y-%m-%d')  # Convertimos la fecha a cadena
-    usuario_id = 8  # Reemplaza con el ID del usuario correcto
-
-    if titulo and descripcion and fecha_vencimiento:
+    if usuario_id and titulo and descripcion and fecha_vencimiento:
         tarea = Tarea(titulo, descripcion, fecha_vencimiento)
         lista_tareas.append(tarea)
-        
-        # Guardar la tarea en la base de datos
+
         try:
             iniciobd()
-            sql = "INSERT INTO tareas (titulo, descripcion, fecha_venc, user) VALUES (%s, %s, %s, %s)"
-            datos = (titulo, descripcion, fecha_vencimiento_str, usuario_id)
+            sql = "INSERT INTO tareas (titulo, descripcion, fecha_venc, user, completada) VALUES (%s, %s, %s, %s, %s)"
+            datos = (titulo, descripcion, fecha_vencimiento_str, usuario_id, False)  
             cursor1.execute(sql, datos)
             conexion1.commit()
         except mysql.connector.Error as error:
@@ -99,7 +98,7 @@ def agregar_tarea_a_lista():
         descripcion_entry.delete(0, END)
         fecha_vencimiento_entry.set_date(datetime.now())  # Resetear la fecha al dia actual
     else:
-        messagebox.showwarning("Campos vacios", "Por favor, complete todos los campos.")
+        messagebox.showinfo("Campos vacios", "Por favor, complete todos los campos.")
 
 
 
@@ -108,44 +107,37 @@ def mostrar_tareas():
     # Borrar cualquier widget previo
     for widget in texto.winfo_children():
         widget.destroy()
-    tarea_texto = ""
 
-    for i, tarea in enumerate(lista_tareas, start=1):
-        #agarro todas las tareas
-        iniciobd()
-        
-        cursor1.execute(f"select titulo FROM tareas where user= '{usuario_id}' ")
-        titulo= cursor1.fetchall()
-        
+    tarea_texto = []  # Usar una lista para almacenar las descripciones de las tareas
 
-        cursor1.execute(f"select descripcion FROM tareas where user= '{usuario_id}' ")
-        descripcion=cursor1.fetchall()
-       
+    # Obtener solo los 4 valores necesarios de la base de datos para el usuario con ID 5
+    iniciobd()
+    cursor1.execute(f"SELECT titulo, descripcion, fecha_venc, completada FROM tareas WHERE user = {usuario_id}")
+    tareas = cursor1.fetchall()
+    cierrebd()
 
-        cursor1.execute(f"select fecha_venc FROM tareas where user= '{usuario_id}' ")
-        fecha_venc=cursor1.fetchall()
-        
+    for i, tarea_data in enumerate(tareas, start=1):
+        titulo, descripcion, fecha_vencimiento, completada = tarea_data
 
-        
-        cierrebd()
+        tarea = Tarea(titulo, descripcion, fecha_vencimiento)
+        tarea.completada.set(completada)
 
-        tarea_texto += f"Tarea {i}:\n"
-        tarea_texto += f"Titulo: {titulo[i]}\n"
-        tarea_texto += f"Descripcion: {descripcion[i]}\n"
+        tarea_texto.append(f"Tarea {i}:\n")
+        tarea_texto.append(f"Titulo: {titulo}\n")
+        tarea_texto.append(f"Descripcion: {descripcion}\n")
         
-        if tarea.completada.get() == False:
-            tarea_texto += "Estado: Incompleto\n"
-        else:
-            tarea_texto += "Estado: Completo\n"
-        
-        tarea_texto += f"Fecha de Vencimiento: {fecha_venc[i]}\n\n"
+        estado = "Completo" if completada else "Incompleto"
+        tarea_texto.append(f"Estado: {estado}\n")
+
+        tarea_texto.append(f"Fecha de Vencimiento: {fecha_vencimiento}\n\n")
+
+    # Unir las descripciones de las tareas en una sola cadena
+    tarea_texto = "".join(tarea_texto)
 
     texto.config(text=tarea_texto)
     texto.pack()
 
-
-    texto.config(text=tarea_texto)
-    texto.pack()
+    
 
 # Menu de botones
 def botones_opc(opcion):
@@ -178,24 +170,17 @@ def register():
     cierrebd()
 
 def login():
-    global usuario_actual
+    global usuario_id
     iniciobd()
-    cursor1.execute("select usuario, contra FROM users")
-    rows = cursor1.fetchall()
-    a = usuario_login.get()
-    usuario_actual = a
-    b = contrasena_login.get()
-    check = 0
-    for row in rows:
-        if a == row[0] and b == row[1]:
-            check = 1
-            cierrebd()
-            principal()
-            break
-        else:
-            check = 2
-    if check == 2:
-        messagebox.showwarning("","Usuario no encontrado")
+    cursor1.execute("SELECT ID FROM users WHERE usuario = %s AND contra = %s", (usuario_login.get(), contrasena_login.get()))
+    user_data = cursor1.fetchone()
+    if user_data:
+        usuario_id = user_data[0]
+        cierrebd()
+        principal()
+    else:
+        cierrebd()
+        messagebox.showwarning("", "Usuario no encontrado")
             
     
 

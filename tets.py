@@ -313,8 +313,10 @@ def log_opc(opcion):
         enviar_register.pack()
 
 # Creacion de la ventana principal
+wasd = "800x800"
+
 ventana.title("Trabajo programacion")
-ventana.geometry("600x800")
+ventana.geometry(f"{wasd}")
 
 contenedor_botones = Frame(ventana)
 contenedor_botones.pack(pady=20)

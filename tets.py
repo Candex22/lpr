@@ -138,6 +138,7 @@ def agregar_tarea_a_lista():
         titulo_entry.delete(0, END)
         descripcion_entry.delete(0, END)
         fecha_vencimiento_entry.set_date(datetime.now())  # Restablecer la fecha al dia actual
+        fecha_act = datetime.now()
     else:
         messagebox.showinfo("Campos vacios", "Por favor, complete todos los campos.")
 
@@ -164,7 +165,7 @@ def mostrar_tareas():
         tarea_texto.append(f"Titulo: {titulo}\n")
         tarea_texto.append(f"Descripcion: {descripcion}\n")
         
-        estado = "Completo" if completada else "Incompleto"
+        estado = "Completo" if completada else "Incompleto" 
         tarea_texto.append(f"Estado: {estado}\n")
 
         tarea_texto.append(f"Fecha de Vencimiento: {fecha_vencimiento}\n\n")

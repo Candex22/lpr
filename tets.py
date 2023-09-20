@@ -162,12 +162,15 @@ def botones_opc(opcion):
 def register():
     a = usuario_register.get()
     b = contrasena_register.get()
+    usuario_register.pack_forget()
+    contrasena_register.pack_forget()
     iniciobd()
     sql="insert into users(usuario, contra) values (%s,%s)"
     datos=(a,b)
     cursor1.execute(sql, datos)
     conexion1.commit()
     cierrebd()
+    principal()
 
 def login():
     global usuario_id

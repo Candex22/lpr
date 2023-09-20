@@ -1,0 +1,66 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Sep 20, 2023 at 04:19 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+--
+-- Database: `lpr`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tareas`
+--
+
+CREATE TABLE `tareas` (
+  `titulo` varchar(30) NOT NULL,
+  `descripcion` varchar(100) NOT NULL,
+  `fecha_venc` date NOT NULL,
+  `completada` tinyint(1) NOT NULL,
+  `user` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tareas`
+--
+
+INSERT INTO `tareas` (`titulo`, `descripcion`, `fecha_venc`, `completada`, `user`) VALUES
+('wasd', 'wasd', '2023-09-19', 0, 5),
+('wasd', 'wasd', '2023-09-19', 0, 5),
+('wasd', 'wasd', '2023-09-19', 1, 9),
+('wasd', 'wasd', '2023-09-19', 1, 9),
+('wasd', 'wasd', '2023-09-19', 0, 10),
+('wasd', 'wasd', '2023-09-19', 0, 5),
+('wasd', 'wasd', '2023-09-19', 0, 5),
+('asd', 'asd', '2023-09-19', 0, 11),
+('asdf', 'asd', '2023-09-19', 1, 11);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `tareas`
+--
+ALTER TABLE `tareas`
+  ADD KEY `user` (`user`);
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `tareas`
+--
+ALTER TABLE `tareas`
+  ADD CONSTRAINT `tareas_ibfk_1` FOREIGN KEY (`user`) REFERENCES `users` (`ID`);
+COMMIT;

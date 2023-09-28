@@ -149,7 +149,18 @@ def mostrar_tareas():
         widget.destroy()
 
     tarea_texto = []  # Usar una lista para almacenar las descripciones de las tareas
+    # Crear un Frame para contener el Listbox y la barra de desplazamiento
+    frame = Frame(texto)
+    frame.pack(padx=10, pady=10, expand=YES, fill=BOTH)
 
+    # Crear un Listbox y asociarlo con la barra de desplazamiento
+    tarea_listbox = Listbox(frame, width=70, height=20)
+    tarea_listbox.pack(side=LEFT, fill=BOTH, expand=YES)
+
+    # Crear una barra de desplazamiento y asociarla al Listbox
+    scrollbar = Scrollbar(frame, orient=VERTICAL, command=tarea_listbox.yview)
+    scrollbar.pack(side=RIGHT, fill=Y)
+    tarea_listbox.config(yscrollcommand=scrollbar.set)
     iniciobd()
     cursor1.execute(f"SELECT titulo, descripcion, fecha_venc, completada FROM tareas WHERE user = {usuario_id}")
     tareas = cursor1.fetchall()
@@ -160,15 +171,20 @@ def mostrar_tareas():
 
         tarea = Tarea(titulo, descripcion, fecha_vencimiento)
         tarea.completada.set(completada)
+        tarea_texto = f'Tarea {i}:\n'
+        tarea_listbox.insert(END, tarea_texto)
+        tarea_texto = f'Título: {tarea.titulo}\n'
+        tarea_listbox.insert(END, tarea_texto)
+        tarea_texto = f'Descripción: {tarea.descripcion}\n'
+        tarea_listbox.insert(END, tarea_texto)
+        tarea_texto = f'Fecha de Vencimiento: {tarea.fecha_vencimiento}\n'
+        tarea_listbox.insert(END, tarea_texto)
+        tarea_texto = f'Estado: {"Completa" if tarea.completada.get() else "Incompleta"}\n\n'
+        tarea_listbox.insert(END, tarea_texto)
+        tarea_texto = " "
+        tarea_listbox.insert(END, tarea_texto)
 
-        tarea_texto.append(f"Tarea {i}:\n")
-        tarea_texto.append(f"Titulo: {titulo}\n")
-        tarea_texto.append(f"Descripcion: {descripcion}\n")
-        
-        estado = "Completo" if completada else "Incompleto" 
-        tarea_texto.append(f"Estado: {estado}\n")
-
-        tarea_texto.append(f"Fecha de Vencimiento: {fecha_vencimiento}\n\n")
+    tarea_listbox.pack(expand=YES, fill=BOTH)
 
     # Unir las descripciones de las tareas en una sola cadena
     tarea_texto = "".join(tarea_texto)
@@ -221,6 +237,8 @@ def login():
         messagebox.showwarning("", "Usuario no encontrado")
             
 def principal():
+    wasd="800x500"
+    ventana.geometry(f"{wasd}")
     # Creacion de los botones de navegacion
     titulo.pack_forget()
     usuario_label1.pack_forget()
@@ -313,9 +331,8 @@ def log_opc(opcion):
         enviar_register.pack()
 
 # Creacion de la ventana principal
-wasd = "800x800"
-
-ventana.title("Trabajo programacion")
+wasd = "400x400"
+ventana.title("Michi Notes")                                                   
 ventana.geometry(f"{wasd}")
 
 contenedor_botones = Frame(ventana)

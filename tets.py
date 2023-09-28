@@ -259,7 +259,7 @@ def principal():
     boton1 = Button(contenedor_botones, text="Agregar tareas", command=lambda: botones_opc(1))
     boton2 = Button(contenedor_botones, text="Mostrar tareas", command=lambda: botones_opc(2))
     boton3 = Button(contenedor_botones, text="Estado de tareas", command=lambda: botones_opc(3))
-    boton4 = Button(contenedor_botones, text="Salir", command=lambda: ventana.quit())
+    boton4 = Button(contenedor_botones, text="Salir", command=lambda: salida())
     boton1.pack(side=LEFT, padx=10)
     boton2.pack(side=LEFT, padx=10)
     boton3.pack(side=LEFT, padx=10)
@@ -330,6 +330,10 @@ def log_opc(opcion):
         contrasena_register.pack()
         enviar_register.pack()
 
+def salida():
+    check = messagebox.askquestion("Salida", "Estas seguro que quieres salir?")
+    if check == "yes":
+        ventana.quit()	
 # Creacion de la ventana principal
 wasd = "400x400"
 ventana.title("Michi Notes")                                                   
@@ -339,7 +343,7 @@ contenedor_botones = Frame(ventana)
 contenedor_botones.pack(pady=20)
 boto1 = Button(contenedor_botones, text="Iniciar sesion", command=lambda: log_opc(1))
 boto2 = Button(contenedor_botones, text="Registrate", command=lambda: log_opc(2))
-boto4 = Button(contenedor_botones, text="Salir", command=lambda: ventana.quit())
+boto4 = Button(contenedor_botones, text="Salir", command= lambda: salida())
 boto1.pack(side=LEFT, padx=10)
 boto2.pack(side=LEFT, padx=10)
 boto4.pack(side=LEFT, padx=10)
@@ -348,3 +352,4 @@ cargar_tareas_desde_db()
 
 # Iniciar la interfaz
 ventana.mainloop()
+
